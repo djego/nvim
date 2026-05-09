@@ -19,6 +19,13 @@ function M.setup()
   M.map("n", "<leader>f", function()
     vim.lsp.buf.format({ async = true })
   end, { desc = "Format code" })
-end
+
+  local ok, builtin = pcall(require, "telescope.builtin")
+  if ok then
+    M.map("n", "gd", builtin.lsp_definitions, { desc = "Ir a definición" })
+    M.map("n", "gi", builtin.lsp_implementations, { desc = "Ir a implementación" })
+    M.map("n", "gr", builtin.lsp_references, { desc = "Ver referencias" })
+    end
+ end
 
 return M
