@@ -3,30 +3,36 @@ return {
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeFindFile" },
+    keys = {
+      { "<leader>e", ":NvimTreeToggle<CR>", desc = "Toggle file tree", silent = true },
+    },
     config = function()
       require("nvim-tree").setup()
-      vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { silent = true })
-    end
+    end,
   },
 
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.5",
     dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = "Telescope",
+    keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>",       desc = "Find files" },
+      { "<leader>fg", "<cmd>Telescope live_grep<cr>",        desc = "Live grep" },
+      { "gd",         "<cmd>Telescope lsp_definitions<cr>",  desc = "Definitions" },
+      { "gr",         "<cmd>Telescope lsp_references<cr>",   desc = "References" },
+      { "gi",         "<cmd>Telescope lsp_implementations<cr>", desc = "Implementations" },
+    },
     config = function()
-      local telescope = require("telescope")
-      telescope.setup()
-      vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>")
-      vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
-      vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<cr>")
-      vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>")
-      vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<cr>")
-    end
+      require("telescope").setup()
+    end,
   },
 
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("nvim-treesitter.configs").setup {
         ensure_installed = { "lua", "typescript", "javascript", "rust", "json", "markdown" },
@@ -39,6 +45,7 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
     config = function()
       require("lualine").setup { options = { theme = "gruvbox" } }
     end
@@ -69,11 +76,13 @@ return {
 
   {
     "williamboman/mason.nvim",
-    config = true
+    cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonUninstall" },
+    config = true,
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    dependencies = { "neovim/nvim-lspconfig" },
+    dependencies = { "neovim/nvim-lspconfig", "williamboman/mason.nvim" },
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("mason-lspconfig").setup {
         ensure_installed = { "ts_ls", "lua_ls" }

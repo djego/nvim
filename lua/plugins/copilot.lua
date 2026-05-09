@@ -1,10 +1,10 @@
 return {
   "github/copilot.vim",
+  event = "InsertEnter",
   config = function()
-    -- Opcional: deshabilitar tab y usar <C-l> para aceptar sugerencias
     vim.g.copilot_no_tab_map = true
-    vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")',
+    -- <C-j> para aceptar (evita choque con <C-l> de navegación de splits)
+    vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("<CR>")',
       { silent = true, expr = true })
-  end
+  end,
 }
-
