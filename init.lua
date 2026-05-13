@@ -50,7 +50,49 @@ vim.opt.timeoutlen = 400
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- Tabline siempre visible (necesario para bufferline)
+vim.opt.showtabline = 2
+
 vim.cmd([[colorscheme catppuccin]])
+
+-- Diagnostics: virtual text + floats con border
+vim.diagnostic.config({
+  virtual_text = { prefix = "●", spacing = 2 },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = { border = "rounded", source = "if_many" },
+})
+
+-- Iconos en signs de diagnóstico
+local signs = { Error = " ", Warn = " ", Info = " ", Hint = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
+-- Border rounded en hover y signature_help
+vim.lsp.handlers["textDocument/hover"] =
+  vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+vim.lsp.handlers["textDocument/signatureHelp"] =
+  vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+
+-- Cursorline solo en la ventana activa
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  callback = function() vim.wo.cursorline = true end,
+})
+vim.api.nvim_create_autocmd("WinLeave", {
+  callback = function() vim.wo.cursorline = false end,
+})
+
+-- Relativenumber solo en normal mode
+vim.api.nvim_create_autocmd("InsertEnter", {
+  callback = function() vim.wo.relativenumber = false end,
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
+  callback = function() vim.wo.relativenumber = true end,
+})
 
 -- LSP keymaps (only attached to buffers with an active server)
 vim.api.nvim_create_autocmd("LspAttach", {

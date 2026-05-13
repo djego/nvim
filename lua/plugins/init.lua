@@ -47,7 +47,26 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     event = "VeryLazy",
     config = function()
-      require("lualine").setup { options = { theme = "gruvbox" } }
+      require("lualine").setup {
+        options = {
+          theme = "catppuccin",
+          component_separators = { left = "│", right = "│" },
+          section_separators = { left = "", right = "" },
+          globalstatus = true,
+        },
+        sections = {
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = {
+            {
+              "diagnostics",
+              sources = { "nvim_diagnostic" },
+              symbols = { error = " ", warn = " ", info = " ", hint = " " },
+            },
+            "encoding",
+            "filetype",
+          },
+        },
+      }
     end
   },
 
@@ -69,6 +88,8 @@ return {
         telescope = true,
         nvimtree = true,
         which_key = true,
+        bufferline = true,
+        mini = { enabled = true },
       },
       transparent_background = true,
     },
