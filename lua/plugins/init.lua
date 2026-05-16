@@ -108,7 +108,8 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("mason-lspconfig").setup {
-        ensure_installed = { "ts_ls", "lua_ls" }
+        ensure_installed = { "ts_ls", "lua_ls" },
+        automatic_enable = { exclude = { "stylua" } },
       }
       vim.lsp.config("ts_ls", {})
       vim.lsp.config("lua_ls", {
