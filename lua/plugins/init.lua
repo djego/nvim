@@ -55,6 +55,7 @@ return {
           globalstatus = true,
         },
         sections = {
+          lualine_b = { "branch", "diff" },
           lualine_c = { { "filename", path = 1 } },
           lualine_x = {
             {
@@ -89,6 +90,7 @@ return {
         nvimtree = true,
         which_key = true,
         bufferline = true,
+        gitsigns = true,
         mini = { enabled = true },
       },
       transparent_background = true,
@@ -108,9 +110,8 @@ return {
       require("mason-lspconfig").setup {
         ensure_installed = { "ts_ls", "lua_ls" }
       }
-      local lspconfig = require("lspconfig")
-      lspconfig.ts_ls.setup {}
-      lspconfig.lua_ls.setup {
+      vim.lsp.config("ts_ls", {})
+      vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
             diagnostics = {
@@ -118,7 +119,8 @@ return {
             }
           }
         }
-      }
+      })
+      vim.lsp.enable({ "ts_ls", "lua_ls" })
     end
   }
 
