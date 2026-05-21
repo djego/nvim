@@ -14,7 +14,7 @@ return {
 
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.5",
+    branch = "master",
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = "Telescope",
     keys = {
@@ -25,20 +25,40 @@ return {
       { "gi",         "<cmd>Telescope lsp_implementations<cr>", desc = "Implementations" },
     },
     config = function()
-      require("telescope").setup()
+      local actions = require("telescope.actions")
+      require("telescope").setup({
+        defaults = {
+          prompt_prefix = "   ",
+          selection_caret = "  ",
+          entry_prefix = "  ",
+          sorting_strategy = "ascending",
+          layout_config = {
+            horizontal = { prompt_position = "top", preview_width = 0.55 },
+            width = 0.87,
+            height = 0.80,
+          },
+          mappings = {
+            i = { ["<esc>"] = actions.close },
+          },
+        },
+      })
     end,
   },
 
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
     config = function()
-      require("nvim-treesitter.configs").setup {
-        ensure_installed = { "lua", "typescript", "javascript", "rust", "json", "markdown" },
-        highlight = { enable = true }
-      }
-    end
+      local langs = { "lua", "typescript", "javascript", "tsx", "rust", "json", "markdown", "vim", "vimdoc", "query" }
+      require("nvim-treesitter").install(langs)
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = langs,
+        callback = function() pcall(vim.treesitter.start) end,
+      })
+    end,
   },
 
   -- Statusline
@@ -56,7 +76,13 @@ return {
         },
         sections = {
           lualine_b = { "branch", "diff" },
-          lualine_c = { { "filename", path = 1 } },
+          lualine_c = {
+            {
+              "filename",
+              path = 1,
+              color = { fg = "#cdd6f4", bg = "#313244", gui = "bold" },
+            },
+          },
           lualine_x = {
             {
               "diagnostics",
@@ -108,7 +134,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("mason-lspconfig").setup {
-        ensure_installed = { "ts_ls", "lua_ls" },
+        ensure_installed = { "ts_ls", "lua_ls", "jsonls" },
         automatic_enable = { exclude = { "stylua" } },
       }
       vim.lsp.config("ts_ls", {})
@@ -121,7 +147,8 @@ return {
           }
         }
       })
-      vim.lsp.enable({ "ts_ls", "lua_ls" })
+      vim.lsp.config("jsonls", {})
+      vim.lsp.enable({ "ts_ls", "lua_ls", "jsonls" })
     end
   }
 
