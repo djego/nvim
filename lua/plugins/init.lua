@@ -69,7 +69,7 @@ return {
     config = function()
       require("lualine").setup {
         options = {
-          theme = "catppuccin",
+          theme = "tokyonight",
           component_separators = { left = "│", right = "│" },
           section_separators = { left = "", right = "" },
           globalstatus = true,
@@ -98,29 +98,24 @@ return {
   },
 
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "folke/tokyonight.nvim",
+    name = "tokyonight",
     lazy = false,
     priority = 1000,
-    opts = {
-      background = { light = "latte", dark = "mocha" },
-      blur = {
-        enabled = true,
-        timeout = 100,
-      },
-      integrations = {
-        treesitter = true,
-        lualine = true,
-        mason = true,
-        telescope = true,
-        nvimtree = true,
-        which_key = true,
-        bufferline = true,
-        gitsigns = true,
-        mini = { enabled = true },
-      },
-      transparent_background = true,
-    },
+    config = function()
+      require("tokyonight").setup({
+        style = "moon",          -- night | storm | day | moon
+        transparent = true,
+        terminal_colors = true,
+        styles = {
+          comments = { italic = true },
+          keywords = { italic = true },
+          sidebars = "transparent",
+          floats = "transparent",
+        },
+      })
+      vim.cmd.colorscheme("tokyonight")
+    end,
   },
 
   {

@@ -53,8 +53,6 @@ vim.opt.splitbelow = true
 -- Tabline siempre visible (necesario para bufferline)
 vim.opt.showtabline = 2
 
-vim.cmd([[colorscheme catppuccin]])
-
 -- Diagnostics: virtual text + floats con border
 vim.diagnostic.config({
   virtual_text = { prefix = "●", spacing = 2 },
